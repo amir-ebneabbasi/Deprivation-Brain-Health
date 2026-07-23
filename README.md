@@ -4,57 +4,64 @@
 
 This repository contains the code used to quantify the neuroanatomical mediation of neighbourhood deprivation on psychiatric and neurological disease risk.
 
-The pipeline was developed for analyses in:
+The analysis was developed for two large population-based cohorts:
 
-* **UK Biobank (UKB)** (~500,000 adults)
-* **Adolescent Brain Cognitive Development (ABCD) Study** (11,878 children)
+* **UK Biobank (UKB):** approximately 500,000 adults aged 40–69 years
+* **Adolescent Brain Cognitive Development (ABCD) Study:** 11,878 children aged 9–10 years
 
-Across both cohorts, mediation analyses were performed between deprivation measures, regional brain imaging phenotypes, and multiple psychiatric and neurological disorders.
+Across both cohorts, mediation analyses were performed between neighbourhood deprivation, regional brain imaging phenotypes, and psychiatric and neurological disorders.
+
+---
 
 ## Statistical framework
 
-The mediation framework consists of:
+For each deprivation–brain–disease combination, two regression models are fitted.
 
-1. Linear regression
+### 1. Mediator model
 
-[
-\text{Brain Volume} = \beta_0 + a(\text{Deprivation}) + \mathbf{Covariates}
-]
+Linear regression:
 
-2. Logistic regression
+```
+Brain volume ~ Deprivation + Covariates
+```
 
-[
-\log\left(\frac{P(\text{Disease})}{1-P(\text{Disease})}\right)
-==============================================================
+The coefficient for deprivation represents **path a**.
 
-\beta_0
-+
-c'(\text{Deprivation})
-+
-b(\text{Brain Volume})
-+
-\mathbf{Covariates}
-]
+### 2. Outcome model
 
-The indirect (mediation) effect is computed as
+Binomial logistic regression:
 
-[
-a \times b
-]
+```
+Disease ~ Deprivation + Brain volume + Covariates
+```
 
-Bootstrap sampling is used to estimate:
+The coefficient for brain volume represents **path b**, while the coefficient for deprivation represents the **direct effect**.
+
+The indirect (mediation) effect is calculated as:
+
+```
+Indirect effect = a × b
+```
+
+Bootstrap resampling is used to estimate:
 
 * indirect effects
 * percentile confidence intervals
 * empirical two-sided p-values
 
+---
+
 ## Features
 
-* Logistic regression for binary disease outcomes
-* Linear regression for imaging phenotypes
+* Bootstrap mediation analysis
+* Linear regression for continuous brain imaging phenotypes
+* Binomial logistic regression for binary disease outcomes
 * Automatic control-group construction
 * Reproducible bootstrap sampling
 * Parallel processing of thousands of mediation models
+* SLURM array support for high-performance computing
+
+---
 
 ## License
 
