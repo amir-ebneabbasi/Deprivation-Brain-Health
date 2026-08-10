@@ -1,67 +1,104 @@
-# Deprivation–Brain–Disease Mediation Analysis
+# Deprivation–Brain–Disease and Genetic Analyses
 
 ## Overview
 
-This repository contains the code used to quantify the neuroanatomical mediation of neighbourhood deprivation on psychiatric and neurological disease risk.
+This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, disease risk, and genetic variation in large neuroimaging cohorts, including UK Biobank (UKB) and the Adolescent Brain Cognitive Development (ABCD) Study.
 
-The analysis was developed for two large population-based cohorts:
+The repository includes two main components:
 
-* **UK Biobank (UKB):** approximately 500,000 adults aged 40–69 years
-* **Adolescent Brain Cognitive Development (ABCD) Study:** 11,878 children aged 9–10 years
-
-Across both cohorts, mediation analyses were performed between neighbourhood deprivation, regional brain imaging phenotypes, and psychiatric and neurological disorders.
+1. **Deprivation–brain–disease mediation analysis**
+2. **Genetic analysis using KING and GENESIS**
 
 ---
 
-## Statistical framework
+## Deprivation–Brain–Disease Mediation
 
-For each deprivation–brain–disease combination, two regression models are fitted.
+`dep_main.py` tests whether regional brain phenotypes mediate associations between neighbourhood deprivation and psychiatric or neurological disease.
 
-### 1. Mediator model
+Two models are fitted:
 
-Linear regression:
-
-```
-Brain volume ~ Deprivation + Covariates
-```
-
-The coefficient for deprivation represents **path a**.
-
-### 2. Outcome model
-
-Binomial logistic regression:
-
-```
-Disease ~ Deprivation + Brain volume + Covariates
+```text
+Brain phenotype ~ Deprivation + Covariates
+Disease ~ Deprivation + Brain phenotype + Covariates
 ```
 
-The coefficient for brain volume represents **path b**, while the coefficient for deprivation represents the **direct effect**.
+The mediation effect is calculated as:
 
-The indirect (mediation) effect is calculated as:
-
-```
+```text
 Indirect effect = a × b
 ```
 
-Bootstrap resampling is used to estimate:
-
-* indirect effects
-* percentile confidence intervals
-* empirical two-sided p-values
+Bootstrap resampling is used to estimate indirect effects, confidence intervals, and empirical p-values.
 
 ---
 
-## Features
+## Genetic Analysis
 
-* Bootstrap mediation analysis
-* Linear regression for continuous brain imaging phenotypes
-* Binomial logistic regression for binary disease outcomes
-* Automatic control-group construction
-* Reproducible bootstrap sampling
-* Parallel processing of thousands of mediation models
-* SLURM array support for high-performance computing
+The genetic pipeline performs relatedness estimation, population structure correction, genome-wide association testing, and heritability estimation.
+
+### `plink_to_gds.R`
+
+Converts merged autosomal PLINK files (`BED/BIM/FAM`) to GDS format using `SNPRelate`.
+
+**Output:** `genotype_autosomes.gds`
+
+### `king.sh`
+
+Runs KING to estimate pairwise genetic relatedness up to third-degree relatives.
+
+**Output:** `eur_king.kin0`
+
+### `king_to_matrix.R`
+
+Converts KING relatedness estimates into a kinship matrix compatible with `GENESIS`.
+
+**Output:** `eur_kinship_matrix.rds`
+
+### `PC_air.R`
+
+Runs PC-AiR using LD-pruned SNPs and KING relatedness estimates to obtain ancestry principal components while accounting for related individuals.
+
+**Output:** `mypc.rds`
+
+### `PC_relate.R`
+
+Runs PC-Relate using ancestry PCs and unrelated reference samples to estimate ancestry-adjusted genetic relatedness and construct a sparse genetic relationship matrix (GRM).
+
+**Outputs:** `mypcrelate.rds` and `mypcrelate_sparse.rds`
+
+### `genesis.R`
+
+Runs the final GENESIS analysis for each brain phenotype using a SLURM array. It:
+
+* fits a linear mixed model using the PC-Relate GRM
+* adjusts for demographic, imaging, and PC-AiR covariates
+* performs single-SNP genome-wide association testing
+* estimates SNP-based heritability
+* exports GWAS summary statistics
+
+**Outputs:** `assoc_<ID>.rds`, `heritability_<ID>.rds`, and `GWAS_<ID>.txt`
 
 ---
+
+## Genetic Workflow
+
+```text
+PLINK BED/BIM/FAM
+       ↓
+plink_to_gds.R
+       ↓
+KING → king_to_matrix.R
+       ↓
+PC_air.R
+       ↓
+PC_relate.R
+       ↓
+Sparse GRM
+       ↓
+genesis.R
+       ↓
+GWAS + Heritability
+```
 
 ## License
 
