@@ -15,18 +15,18 @@ outdir <- file.path(dir, "genesis", "output")
 if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
 # File paths
-mydat_file <- file.path(dir, "HMM_for_GENESIS.txt")
-grm_file   <- file.path(dir, "genesis/eur", "mypcrelate_sparse.rds")
+dat_file <- file.path(dir, "pheno.txt")
+grm_file   <- file.path(dir, "genesis/eur", "pcrelate_sparse.rds")
 gds_file   <- file.path(dir, "genesis/eur", "genotype_autosomes.gds")
 
 # Check files exist
-stopifnot(file.exists(mydat_file))
+stopifnot(file.exists(dat_file))
 stopifnot(file.exists(grm_file))
 stopifnot(file.exists(gds_file))
 
 # Make ScanAnnotationDataFrame
-mydat <- read.table(mydat_file, header = TRUE, stringsAsFactors = FALSE)
-scanAnnot <- ScanAnnotationDataFrame(mydat)
+dat <- read.table(dat_file, header = TRUE, stringsAsFactors = FALSE)
+scanAnnot <- ScanAnnotationDataFrame(dat)
 
 # SLURM task ID
 task_id <- as.integer(Sys.getenv("SLURM_ARRAY_TASK_ID"))
