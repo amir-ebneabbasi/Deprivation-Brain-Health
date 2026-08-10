@@ -34,13 +34,21 @@ Bootstrap resampling is used to estimate indirect effects, confidence intervals,
 
 ## Genetic Analysis
 
-The genetic pipeline performs relatedness estimation, population structure correction, genome-wide association testing, and heritability estimation.
+The genetic pipeline performs genotype preparation, LD pruning, relatedness estimation, population structure correction, genome-wide association testing, and heritability estimation.
 
 ### `plink_to_gds.R`
 
 Converts merged autosomal PLINK files (`BED/BIM/FAM`) to GDS format using `SNPRelate`.
 
 **Output:** `genotype_autosomes.gds`
+
+### `ld_pruning.R`
+
+Performs linkage disequilibrium (LD) pruning of the autosomal genotype data using `SNPRelate`. Correlation-based pruning is applied to reduce redundancy among highly correlated genetic variants.
+
+The resulting independent SNP set is used for downstream PC-AiR and PC-Relate analyses.
+
+**Output:** `pruned_snps.txt`
 
 ### `king.sh`
 
@@ -79,25 +87,6 @@ Runs the final GENESIS analysis for each brain phenotype using a SLURM array. It
 **Outputs:** `assoc_<ID>.rds`, `heritability_<ID>.rds`, and `GWAS_<ID>.txt`
 
 ---
-
-## Genetic Workflow
-
-```text
-PLINK BED/BIM/FAM
-       ↓
-plink_to_gds.R
-       ↓
-KING → king_to_matrix.R
-       ↓
-PC_air.R
-       ↓
-PC_relate.R
-       ↓
-Sparse GRM
-       ↓
-genesis.R
-       ↓
-GWAS + Heritability
 ```
 
 ## License
