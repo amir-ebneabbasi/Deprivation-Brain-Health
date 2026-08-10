@@ -12,7 +12,7 @@ pruned_file <- file.path(output_dir, "pruned_snps.txt")
 king_file <- file.path(output_dir, "kinship_matrix.rds")
 
 # NEW
-mypc_file <- file.path(output_dir, "mypc.rds")
+pc_file <- file.path(output_dir, "pc.rds")
 
 # Open GDS
 gds <- snpgdsOpen(gdsfile)
@@ -44,9 +44,9 @@ gds_reader <- GdsGenotypeReader(filename = gdsfile)
 genoData <- GenotypeData(gds_reader)
 
 # Run PC-Air
-mypc <- pcair(genoData, kinobj = KINGmat, divobj = KINGmat, 
+pc <- pcair(genoData, kinobj = KINGmat, divobj = KINGmat, 
           snp.include = pruned, num.cores=8)
 
 # Save PC Results
-saveRDS(mypc, file = mypc_file, compress = TRUE)
-cat("PC Results completed and saved to:", mypc_file, "\n")
+saveRDS(pc, file = pc_file, compress = TRUE)
+cat("PC Results completed and saved to:", pc_file, "\n")
