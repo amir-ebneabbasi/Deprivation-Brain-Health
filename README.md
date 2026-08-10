@@ -62,13 +62,13 @@ Converts KING relatedness estimates into a kinship matrix compatible with `GENES
 
 **Output:** `eur_kinship_matrix.rds`
 
-### `PC_air.R`
+### `pc_air.R`
 
 Runs PC-AiR using LD-pruned SNPs and KING relatedness estimates to obtain ancestry principal components while accounting for related individuals.
 
 **Output:** `pc.rds`
 
-### `PC_relate.R`
+### `pc_relate.R`
 
 Runs PC-Relate using ancestry PCs and unrelated reference samples to estimate ancestry-adjusted genetic relatedness and construct a sparse genetic relationship matrix (GRM).
 
