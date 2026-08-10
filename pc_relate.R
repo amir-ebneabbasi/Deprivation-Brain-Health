@@ -15,8 +15,8 @@ pc_rds_file <- file.path(output_dir, "processed_pc_matrix.rds")
 unrelated_samples_file <- file.path(output_dir, "processed_unrelated_samples.rds")
 
 # NEW
-mypcrelate_file <- file.path(output_dir, "mypcrelate.rds")
-mypcrelate_sparse_file <- file.path(output_dir, "mypcrelate_sparse.rds")
+pcrelate_file <- file.path(output_dir, "pcrelate.rds")
+pcrelate_sparse_file <- file.path(output_dir, "pcrelate_sparse.rds")
 
 # Load PCs
 cat("Loading PC matrix from RDS file...\n")
@@ -46,7 +46,7 @@ cat("Loaded", length(geno_ids), "sample IDs from GDS\n")
 cat("\nRunning PC-Relate...\n")
 genoBlock <- GenotypeBlockIterator(genoData, snpInclude = pruned)
 
-mypcrelate <- pcrelate(
+pcrelate <- pcrelate(
   genoBlock,
   training.set= unrel,
   pcs = pc,
@@ -54,19 +54,19 @@ mypcrelate <- pcrelate(
   BPPARAM = BiocParallel::MulticoreParam(workers = 4)
 )
 
-saveRDS(mypcrelate, mypcrelate_file)
-cat("PC-Relate saved to:", mypcrelate_file, "\n")
+saveRDS(pcrelate, pcrelate_file)
+cat("PC-Relate saved to:", pcrelate_file, "\n")
 
 # Create Sparse GRM
 cat("\nCreating sparse GRM...\n")
-mypcrelate_sparse <- pcrelateToMatrix(
-  mypcrelate,
+pcrelate_sparse <- pcrelateToMatrix(
+  pcrelate,
   thresh = 2^(-11/2)
 )
 
 # Save Results
-saveRDS(mypcrelate_sparse, mypcrelate_sparse_file)
-cat("Sparse GRM saved to:", mypcrelate_sparse_file, "\n")
+saveRDS(pcrelate_sparse, pcrelate_sparse_file)
+cat("Sparse GRM saved to:", pcrelate_sparse_file, "\n")
 
 # Close GDS connection
 close(genoData)
