@@ -1,5 +1,7 @@
 # Deprivation–Brain–Disease and Genetic Analyses
 
+**Preprint:** [medRxiv (2026)](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1)
+
 ## Overview
 
 This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, disease risk, and genetic variation in large neuroimaging cohorts, including UK Biobank (UKB) and the Adolescent Brain Cognitive Development (ABCD) Study.
