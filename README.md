@@ -41,13 +41,12 @@ All analyses were run on a high-performance computing (HPC) cluster.
 
 ---
 
-## Software dependencies
+## Software versions
 
 ### Versions used in the study
 
 | Software | Version | Used for |
 |---|---|---|
-| FreeSurfer | 6.0.1 | Imaging processing (ABCD and UKB workflows) |
 | Python | 3.11 | Mediation and statistical analyses |
 | statsmodels | 0.14.4 | Regression models |
 | SNPRelate | 1.34.1 | GDS conversion and LD pruning |
