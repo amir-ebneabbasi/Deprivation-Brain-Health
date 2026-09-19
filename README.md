@@ -6,7 +6,7 @@
 
 ## Overview
 
-This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, disease risk, and genetic variation across three cohorts spanning the life span:
+This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, disease risk across three cohorts spanning the life span:
 
 | Cohort | Sample | Age range |
 |---|---|---|
