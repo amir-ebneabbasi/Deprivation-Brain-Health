@@ -1,19 +1,104 @@
 # Deprivation–Brain–Disease and Genetic Analyses
 
-**Preprint:** [medRxiv (2026)](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1)
-
-## Overview
-
-This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, disease risk, and genetic variation in large neuroimaging cohorts, including UK Biobank (UKB) and the Adolescent Brain Cognitive Development (ABCD) Study.
-
-The repository includes two main components:
-
-1. **Deprivation–brain–disease mediation analysis**
-2. **Genetic analysis using KING and GENESIS**
+**Preprint:** Ebneabbasi A, Warrier V, Montagnese M, Romero Garcia R, Bethlehem RAI, Rittman T. *Mapping the Health Burden of Neighbourhood Deprivation: Neurobiological Evidence Across the Life Span.* medRxiv (2026). [https://doi.org/10.64898/2026.08.29.26361714](https://doi.org/10.64898/2026.08.29.26361714) · [Preprint page](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1) · [PDF](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1.full.pdf)
 
 ---
 
-## Deprivation–Brain–Disease Mediation
+## Overview
+
+This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, disease risk, and genetic variation across three cohorts spanning the life span:
+
+| Cohort | Sample | Age range |
+|---|---|---|
+| HEALthy Brain and Child Development (HBCD) Study | n = 84 | 0–4 weeks postnatal |
+| Adolescent Brain Cognitive Development (ABCD) Study | n = 4,792 | 9–10 years |
+| UK Biobank (UKB) | ~500,000 adults | 44–87 years |
+
+The study examines whether neighbourhood deprivation is associated with disease risk and regional brain volume, and whether regional brain volume mediates the deprivation–disease association. Associations and mediation patterns were assessed for replication across independent populations.
+
+The repository includes two main components:
+
+1. **Deprivation–brain–disease mediation analysis** (`dep_main.py`)
+2. **Genetic analysis using KING and GENESIS** (R and shell scripts)
+
+---
+
+## Table of contents
+
+- [Computing environment](#computing-environment)
+- [Software dependencies](#software-dependencies)
+- [Data availability](#data-availability)
+- [Data processing and provenance](#data-processing-and-provenance)
+- [Deprivation–brain–disease mediation](#deprivationbraindisease-mediation)
+- [Genetic analysis](#genetic-analysis)
+- [Running on SLURM](#running-on-slurm)
+- [Citation](#citation)
+- [License](#license)
+
+---
+
+## Computing environment
+
+All analyses were run on a high-performance computing (HPC) cluster.
+
+---
+
+## Software dependencies
+
+### Versions used in the study
+
+| Software | Version | Used for |
+|---|---|---|
+| FreeSurfer | 6.0.1 | Imaging processing (ABCD and UKB workflows) |
+| Python | 3.11 | Mediation and statistical analyses |
+| statsmodels | 0.14.4 | Regression models |
+| SNPRelate | 1.34.1 | GDS conversion and LD pruning |
+| KING | 2.3.2 | Pairwise relatedness (up to third degree) |
+| GENESIS | 2.30.0 | Ancestry PCs, kinship, linear mixed models |
+| PC-AiR | 0.8.0 | Ancestry principal components accounting for relatedness |
+| PC-Relate | 1.0.0 | Ancestry-adjusted GRM |
+
+PC-AiR and PC-Relate are run through the GENESIS package (`pcair()` and `pcrelate()`).
+
+Multiple-comparison correction used the Benjamini–Hochberg false discovery rate (FDR) procedure.
+
+
+### Example environment setup
+
+```bash
+pip install statsmodels==0.14.4 numpy pandas scipy
+
+# R (genetic analysis) — run inside R
+# if (!require("BiocManager")) install.packages("BiocManager")
+# BiocManager::install(c("SNPRelate", "GENESIS"))   # target GENESIS 2.30.0, SNPRelate 1.34.1
+```
+
+KING (v2.3.2) is a standalone binary; download it from the [KING website](https://www.kingrelatedness.com/) and make sure it is on your `PATH` (or loaded as a module on your cluster).
+
+---
+
+## Data availability
+
+Participant-level data are controlled-access and cannot be redistributed by the authors. This repository therefore contains code only.
+
+- **ABCD and HBCD:** available to eligible researchers through the [NIH Brain Development Cohorts Data Hub](https://www.nbdc-datahub.org/), subject to approval of a Data Use Certification and completion of the required training.
+- **UK Biobank:** available to eligible researchers through the [UK Biobank access process](https://www.ukbiobank.ac.uk/use-our-data/apply-for-access/).
+
+---
+
+## Data processing and provenance
+
+- **HBCD:** imaging and genetic data were processed by the HBCD Study, and preprocessed data were downloaded for the present analyses.
+- **UKB genetic data:** processed by the UK Biobank team.
+- **ABCD and UKB imaging:** processed using FreeSurfer (v6.0.1) workflows, as described at:
+  - ABCD: [ucam-department-of-psychiatry/ABCD](https://github.com/ucam-department-of-psychiatry/ABCD)
+  - UKB: [ucam-department-of-psychiatry/UKB](https://github.com/ucam-department-of-psychiatry/UKB)
+- **ABCD genetic quality control:** followed the pipeline at [vwarrier/ABCD_geneticQC](https://github.com/vwarrier/ABCD_geneticQC).
+- **Spin permutation analyses:** performed with code at [amir-ebneabbasi/Spatial-Colocation](https://github.com/amir-ebneabbasi/Spatial-Colocation).
+
+---
+
+## Deprivation–brain–disease mediation
 
 `dep_main.py` tests whether regional brain phenotypes mediate associations between neighbourhood deprivation and psychiatric or neurological disease.
 
@@ -30,13 +115,17 @@ The mediation effect is calculated as:
 Indirect effect = a × b
 ```
 
-Bootstrap resampling is used to estimate indirect effects, confidence intervals, and empirical p-values.
+where *a* is the deprivation coefficient in the brain model and *b* is the brain-phenotype coefficient in the disease model.
+
+Bootstrap resampling is used to estimate indirect effects, confidence intervals, and empirical p-values. Multiple comparisons are controlled with Benjamini–Hochberg FDR.
 
 ---
 
-## Genetic Analysis
+## Genetic analysis
 
-The genetic pipeline performs genotype preparation, LD pruning, relatedness estimation, population structure correction, genome-wide association testing, and heritability estimation.
+```text
+plink_to_gds.R → ld_pruning.R → king.sh → king_to_matrix.R → pc_air.R → pc_relate.R → genesis.R
+```
 
 ### `plink_to_gds.R`
 
@@ -54,7 +143,7 @@ The resulting independent SNP set is used for downstream PC-AiR and PC-Relate an
 
 ### `king.sh`
 
-Runs KING to estimate pairwise genetic relatedness up to third-degree relatives.
+Runs KING (v2.3.2) to estimate pairwise genetic relatedness up to third-degree relatives.
 
 **Output:** `eur_king.kin0`
 
@@ -80,16 +169,34 @@ Runs PC-Relate using ancestry PCs and unrelated reference samples to estimate an
 
 Runs the final GENESIS analysis for each brain phenotype using a SLURM array. It:
 
-* fits a linear mixed model using the PC-Relate GRM
-* adjusts for demographic, imaging, and PC-AiR covariates
-* performs single-SNP genome-wide association testing
-* estimates SNP-based heritability
-* exports GWAS summary statistics
+- fits a linear mixed model using the PC-Relate GRM
+- adjusts for demographic, imaging, and PC-AiR covariates
 
-**Outputs:** `assoc_<ID>.rds`, `heritability_<ID>.rds`, and `GWAS_<ID>.txt`
+**Outputs:** `kinship-adjusted estimates`
 
 ---
+
+## Running on SLURM
+
+TBC
+
+---
+
+## Citation
+
+If you use this code, please cite:
+
+```bibtex
+@article{ebneabbasi2026deprivation,
+  title   = {Mapping the Health Burden of Neighbourhood Deprivation: Neurobiological Evidence Across the Life Span},
+  author  = {Ebneabbasi, Amir and Warrier, Varun and Montagnese, Marcella and Romero Garcia, Rafael and Bethlehem, Richard A.I. and Rittman, Timothy},
+  journal = {medRxiv},
+  year    = {2026},
+  doi     = {10.64898/2026.08.29.26361714}
+}
 ```
+
+---
 
 ## License
 
