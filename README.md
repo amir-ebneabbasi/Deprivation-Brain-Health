@@ -73,6 +73,10 @@ pip install statsmodels==0.14.4 numpy pandas scipy
 
 KING (v2.3.2) is a standalone binary; download it from the [KING website](https://www.kingrelatedness.com/) and make sure it is on your `PATH` (or loaded as a module on your cluster).
 
+### Installation time
+
+Setting up the environment is quick. On a standard HPC node with internet access, installing the Python packages takes about 1–2 minutes, downloading the KING binary takes under a minute, and installing the R/Bioconductor packages (GENESIS and SNPRelate, plus their dependencies) takes roughly 5–10 minutes.
+
 ---
 
 ## Data availability
