@@ -29,7 +29,7 @@ import pandas as pd
 import statsmodels.api as sm
 
 
-DEFAULT_DATA_DIR = Path("/home/ae516/rds/hpc-work/dep_med")
+DEFAULT_DATA_DIR = Path("path/to/working/dir")
 DEFAULT_INFO_FILENAME = "mediation_info.csv"
 DEFAULT_DATA_FILENAME = "Data_dep_brain_icd.csv"
 DEFAULT_CHUNK_SIZE = 10
