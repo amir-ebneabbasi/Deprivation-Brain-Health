@@ -14,8 +14,6 @@ This repository contains code for analysing relationships between neighbourhood 
 | Adolescent Brain Cognitive Development (ABCD) Study | n = 4,792 | 9–10 years |
 | UK Biobank (UKB) | ~500,000 adults | 44–87 years |
 
-The study examines whether neighbourhood deprivation is associated with disease risk and regional brain volume, and whether regional brain volume mediates the deprivation–disease association. Associations and mediation patterns were assessed for replication across independent populations.
-
 The repository includes two main components:
 
 1. **Deprivation–brain–disease mediation analysis** (`dep_main.py`)
