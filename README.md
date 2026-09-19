@@ -4,11 +4,6 @@
 
 **Preprint:** Ebneabbasi A, Warrier V, Montagnese M, Romero Garcia R, Bethlehem RAI, Rittman T. *Mapping the Health Burden of Neighbourhood Deprivation: Neurobiological Evidence Across the Life Span.* medRxiv (2026). [https://doi.org/10.64898/2026.08.29.26361714](https://doi.org/10.64898/2026.08.29.26361714) · [Preprint page](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1) · [PDF](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1.full.pdf)
 
-<p align="center">
-  <img src="Overview.png" width="800" alt="Study overview">
-</p>
----
-
 ## Overview
 
 This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, disease risk across three cohorts spanning the life span:
