@@ -1,10 +1,29 @@
-# Deprivation–Brain–Disease and Genetic Analyses
+<h1 align="center">Deprivation–Brain–Disease and Genetic Analyses</h1>
+
+<div align="center">
 
 **Preprint:** Ebneabbasi A, Warrier V, Montagnese M, Romero Garcia R, Bethlehem RAI, Rittman T. *Mapping the Health Burden of Neighbourhood Deprivation: Neurobiological Evidence Across the Life Span.* medRxiv (2026). [https://doi.org/10.64898/2026.08.29.26361714](https://doi.org/10.64898/2026.08.29.26361714) · [Preprint page](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1) · [PDF](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1.full.pdf)
+
+</div>
+
+<p align="center">
+  <a href="#computing-environment"><img src="https://img.shields.io/badge/Computing%20environment-0969da?style=for-the-badge" alt="Computing environment"></a>
+  <a href="#software-versions"><img src="https://img.shields.io/badge/Software%20versions-8250df?style=for-the-badge" alt="Software versions"></a>
+  <a href="#data-availability"><img src="https://img.shields.io/badge/Data%20availability-1a7f37?style=for-the-badge" alt="Data availability"></a>
+  <a href="#data-processing-and-provenance"><img src="https://img.shields.io/badge/Data%20processing%20and%20provenance-bf8700?style=for-the-badge" alt="Data processing and provenance"></a>
+  <a href="#deprivationbraindisease-mediation"><img src="https://img.shields.io/badge/Deprivation%E2%80%93brain%E2%80%93disease%20mediation-cf222e?style=for-the-badge" alt="Deprivation–brain–disease mediation"></a>
+  <a href="#genetic-analysis"><img src="https://img.shields.io/badge/Genetic%20analysis-0e8a7d?style=for-the-badge" alt="Genetic analysis"></a>
+  <a href="#citation"><img src="https://img.shields.io/badge/Citation-6e7781?style=for-the-badge" alt="Citation"></a>
+  <a href="#license"><img src="https://img.shields.io/badge/License-24292f?style=for-the-badge" alt="License"></a>
+</p>
+
+---
 
 ## Overview
 
 This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, and disease risk across three cohorts spanning the life span:
+
+<div align="center">
 
 | Cohort | Sample | Age range |
 |---|---|---|
@@ -12,23 +31,12 @@ This repository contains code for analysing relationships between neighbourhood 
 | Adolescent Brain Cognitive Development (ABCD) Study | n = 4,792 | 9–10 years |
 | UK Biobank (UKB) | ~500,000 adults | 44–87 years |
 
+</div>
+
 The repository includes two main components:
 
 1. **Deprivation–brain–disease mediation analysis** (`dep_main.py`)
 2. **Genetic analysis using KING and GENESIS** (R and shell scripts)
-
----
-
-## Table of contents
-
-- [Computing environment](#computing-environment)
-- [Software versions](#software-versions)
-- [Data availability](#data-availability)
-- [Data processing and provenance](#data-processing-and-provenance)
-- [Deprivation–brain–disease mediation](#deprivationbraindisease-mediation)
-- [Genetic analysis](#genetic-analysis)
-- [Citation](#citation)
-- [License](#license)
 
 ---
 
@@ -52,7 +60,8 @@ All analyses were run on a high-performance computing (HPC) cluster using the SL
 | PC-AiR | 0.8.0 | Ancestry principal components accounting for relatedness |
 | PC-Relate | 1.0.0 | Ancestry-adjusted GRM |
 
-PC-AiR and PC-Relate are run through the GENESIS package (`pcair()` and `pcrelate()`).
+> [!NOTE]
+> PC-AiR and PC-Relate are run through the GENESIS package (`pcair()` and `pcrelate()`).
 
 ### Example environment setup
 
@@ -68,13 +77,15 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 
 ### Installation time
 
-Installation typically takes about 10 minutes on a standard HPC node with internet access (Python packages ~1–2 min, KING under 1 min, R/Bioconductor packages ~5–10 min).
+> [!TIP]
+> Installation typically takes about 10 minutes on a standard HPC node with internet access (Python packages ~1–2 min, KING under 1 min, R/Bioconductor packages ~5–10 min).
 
 ---
 
 ## Data availability
 
-Participant-level data are controlled-access and cannot be redistributed by the authors. This repository therefore contains code only.
+> [!IMPORTANT]
+> Participant-level data are controlled-access and cannot be redistributed by the authors. This repository therefore contains code only.
 
 - **ABCD and HBCD:** available to eligible researchers through the [NIH Brain Development Cohorts Data Hub](https://www.nbdc-datahub.org/), subject to approval of a Data Use Certification and completion of the required training.
 - **UK Biobank:** available to eligible researchers through the [UK Biobank access process](https://www.ukbiobank.ac.uk/use-our-data/apply-for-access/).
@@ -183,14 +194,20 @@ Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
 
 `X, Mediator, Y, a, b, direct, indirect`, the confidence intervals and p-values for each (`*_ci_low`, `*_ci_high`, `*_p`), `N`, `N_CASES`, `N_CONTROLS`, and `error` (empty on success).
 
-Benjamini–Hochberg FDR correction is not applied by this script. Merge the chunk files and apply it across models afterwards.
+> [!NOTE]
+> Benjamini–Hochberg FDR correction is not applied by this script. Merge the chunk files and apply it across models afterwards.
 
 ---
 
 ## Genetic analysis
 
-```text
-plink_to_gds.R → ld_pruning.R → king.sh → king_to_matrix.R → pc_air.R → pc_relate.R → genesis.R
+```mermaid
+flowchart LR
+    A["plink_to_gds.R"] --> B["ld_pruning.R"] --> C["king.sh"] --> D["king_to_matrix.R"] --> E["pc_air.R"] --> F["pc_relate.R"] --> G["genesis.R"]
+    classDef step fill:#ddf4ff,stroke:#0969da,color:#0a3069;
+    classDef final fill:#dafbe1,stroke:#1a7f37,color:#0f5323;
+    class A,B,C,D,E,F step;
+    class G final;
 ```
 
 ### `plink_to_gds.R`
