@@ -253,14 +253,6 @@ p = 2 × min(n_positive, n_negative) / (n_positive + n_negative)
 | `--task-id` | `SLURM_ARRAY_TASK_ID`, else 0 | Which chunk to process |
 | `--seed` | none | Random seed (each model in a chunk uses `seed + model index`) |
 
-#### Running on your data
-
-Run a single chunk (for example, a small number of models):
-
-```bash
-python dep_main.py --data-dir /path/to/data --n-bootstrap 5000 --seed 42 --task-id 0
-```
-
 #### Output
 
 Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
