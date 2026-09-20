@@ -93,7 +93,7 @@ def main() -> None:
     )
 
     data_path = args.out_dir / "Data_dep_brain_icd.csv"
-    info_path = args.out_dir / "mediation_info.csv"
+    info_path = args.out_dir / "Mediation_info.csv"
     df.to_csv(data_path, index=False)
     info.to_csv(info_path, index=False)
 
