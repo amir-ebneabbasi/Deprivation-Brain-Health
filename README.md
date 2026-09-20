@@ -201,6 +201,8 @@ Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
 
 ## Genetic analysis
 
+The goal of this pipeline is to obtain ancestry principal components (PCs) and a genetic relationship matrix (GRM) to be used as covariates in downstream analyses.
+
 <p align="center">
   <img src="genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
 </p>
