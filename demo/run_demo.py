@@ -20,7 +20,7 @@ def main() -> None:
 
     for path in (
         args.dep_main,
-        args.data_dir / "mediation_info.csv",
+        args.data_dir / "Mediation_info.csv",
         args.data_dir / "Data_dep_brain_icd.csv",
     ):
         if not path.is_file():
