@@ -185,8 +185,6 @@ Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
 
 Benjamini–Hochberg FDR correction is not applied by this script. Merge the chunk files and apply it across models afterwards.
 
-See [Running on SLURM](#running-on-slurm) for a job-array example.
-
 ---
 
 ## Genetic analysis
