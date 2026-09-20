@@ -226,7 +226,7 @@ The resulting independent SNP set is used for downstream PC-AiR and PC-Relate an
 
 ### `king.sh`
 
-Runs KING (v2.3.2) to estimate pairwise genetic relatedness up to third-degree relatives.
+Runs KING to estimate pairwise genetic relatedness up to third-degree relatives.
 
 **Output:** `eur_king.kin0`
 
