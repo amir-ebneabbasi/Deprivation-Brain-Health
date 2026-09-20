@@ -39,7 +39,7 @@ The repository includes two main components:
 
 ---
 
-## <h2 align="center">Computing environment</h2>
+## Computing environment
 
 All analyses were run on a high-performance computing (HPC) cluster using the SLURM workload manager.
 
