@@ -40,8 +40,6 @@ All analyses were run on a high-performance computing (HPC) cluster using the SL
 
 ## Software versions
 
-### Versions used in the study
-
 | Software | Version | Used for |
 |:---|:---|:---|
 | Python | 3.11 | Mediation and statistical analyses |
