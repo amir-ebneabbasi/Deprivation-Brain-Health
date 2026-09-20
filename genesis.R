@@ -16,8 +16,8 @@ if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
 
 # File paths
 dat_file <- file.path(dir, "pheno.txt")
-grm_file   <- file.path(dir, "genesis/eur", "pcrelate_sparse.rds")
-gds_file   <- file.path(dir, "genesis/eur", "genotype_autosomes.gds")
+grm_file   <- file.path(dir, "genesis/", "pcrelate_sparse.rds")
+gds_file   <- file.path(dir, "genesis/", "genotype_autosomes.gds")
 
 # Check files exist
 stopifnot(file.exists(dat_file))
@@ -38,7 +38,7 @@ cat("Running for outcome:", outcome_var, "\n")
 covariate_names <- c(
   "scansite", "gender", "age",
   "euler", "fd", "fd_max",
-  paste0("PC_AiR_", 1:16)
+  paste0("PC_", 1:10)
 )
 
 # Convert covariates to numeric
