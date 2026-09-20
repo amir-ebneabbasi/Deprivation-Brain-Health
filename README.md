@@ -11,6 +11,7 @@
   <a href="#software-versions"><img src="https://img.shields.io/badge/Software%20versions-8250df?style=for-the-badge" alt="Software versions"></a>
   <a href="#data-availability"><img src="https://img.shields.io/badge/Data%20availability-1a7f37?style=for-the-badge" alt="Data availability"></a>
   <a href="#data-processing-and-provenance"><img src="https://img.shields.io/badge/Data%20processing%20and%20provenance-bf8700?style=for-the-badge" alt="Data processing and provenance"></a>
+  <br>
   <a href="#deprivationbraindisease-mediation"><img src="https://img.shields.io/badge/Deprivation%E2%80%93brain%E2%80%93disease%20mediation-cf222e?style=for-the-badge" alt="Deprivation–brain–disease mediation"></a>
   <a href="#genetic-analysis"><img src="https://img.shields.io/badge/Genetic%20analysis-0e8a7d?style=for-the-badge" alt="Genetic analysis"></a>
   <a href="#citation"><img src="https://img.shields.io/badge/Citation-6e7781?style=for-the-badge" alt="Citation"></a>
@@ -18,7 +19,8 @@
 </p>
 
 ---
-## Overview
+
+<h2 align="center">Overview</h2>
 
 This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, and disease risk across three cohorts spanning the life span:
 
@@ -39,13 +41,13 @@ The repository includes two main components:
 
 ---
 
-## Computing environment
+<h2 align="center">Computing environment</h2>
 
 All analyses were run on a high-performance computing (HPC) cluster using the SLURM workload manager.
 
 ---
 
-## Software versions
+<h2 align="center">Software versions</h2>
 
 ### Versions used in the study
 
@@ -81,7 +83,7 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 
 ---
 
-## Data availability
+<h2 align="center">Data availability</h2>
 
 > [!IMPORTANT]
 > Participant-level data are controlled-access and cannot be redistributed by the authors. This repository therefore contains code only.
@@ -91,7 +93,7 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 
 ---
 
-## Data processing and provenance
+<h2 align="center">Data processing and provenance</h2>
 
 - **HBCD:** imaging and genetic data were processed by the HBCD Study, and preprocessed data were downloaded for the present analyses.
 - **UKB genetic data:** processed by the UK Biobank team.
@@ -102,7 +104,7 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 
 ---
 
-## Deprivation–brain–disease mediation
+<h2 align="center">Deprivation–brain–disease mediation</h2>
 
 `dep_main.py` tests whether regional brain phenotypes mediate the association between neighbourhood deprivation and psychiatric or neurological disease. It runs a bootstrap mediation analysis with a **binary disease outcome** and is designed to run as a SLURM array, with each task processing a chunk of the mediation models.
 
@@ -198,12 +200,12 @@ Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
 
 ---
 
-## Genetic analysis
+<h2 align="center">Genetic analysis</h2>
 
 The goal of this pipeline is to obtain ancestry principal components (PCs) and a genetic relationship matrix (GRM) to be used as covariates in downstream analyses.
 
 <p align="center">
-  <img src="genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
+  <img src="figures/genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
 </p>
 
 ### `plink_to_gds.R`
@@ -222,7 +224,7 @@ The resulting independent SNP set is used for downstream PC-AiR and PC-Relate an
 
 ### `king.sh`
 
-Runs KING to estimate pairwise genetic relatedness up to third-degree relatives.
+Runs KING (v2.3.2) to estimate pairwise genetic relatedness up to third-degree relatives.
 
 **Output:** `eur_king.kin0`
 
@@ -255,7 +257,7 @@ Runs the final GENESIS analysis for each brain phenotype using a SLURM array. It
 
 ---
 
-## Citation
+<h2 align="center">Citation</h2>
 
 If you use this code, please cite:
 
@@ -271,6 +273,6 @@ If you use this code, please cite:
 
 ---
 
-## License
+<h2 align="center">License</h2>
 
 This repository is released under the MIT License.
