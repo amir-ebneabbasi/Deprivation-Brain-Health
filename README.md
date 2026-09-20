@@ -298,7 +298,7 @@ The goal of this pipeline is to obtain ancestry principal components (PCs) and a
   <img src="genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
 </p>
 
-Run the scripts in the order shown, from the folder containing your merged autosomal PLINK files, after adjusting the input and output paths in each script to match your data. `genesis.R` is run as a SLURM array with one task per brain phenotype.
+Run the scripts in the order shown, from the folder containing your merged autosomal PLINK files, after adjusting the input and output paths in each script to match your data.
 
 ```bash
 Rscript plink_to_gds.R
