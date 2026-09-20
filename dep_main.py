@@ -30,7 +30,7 @@ import statsmodels.api as sm
 
 
 DEFAULT_DATA_DIR = Path("path/to/working/dir")
-DEFAULT_INFO_FILENAME = "mediation_info.csv"
+DEFAULT_INFO_FILENAME = "Mediation_info.csv"
 DEFAULT_DATA_FILENAME = "Data_dep_brain_icd.csv"
 DEFAULT_CHUNK_SIZE = 10
 DEFAULT_N_BOOTSTRAP = 5000
