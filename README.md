@@ -18,8 +18,9 @@
 </p>
 
 ---
-
+<div align="center">
 ## Overview
+<div>
 
 This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, and disease risk across three cohorts spanning the life span:
 
