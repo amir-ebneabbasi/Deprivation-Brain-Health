@@ -225,7 +225,7 @@ def identify_fg_columns(data: pd.DataFrame) -> list[str]:
     return [
         column
         for column in data.columns
-        if re.fullmatch(r"[FG]\d{2}", str(column))
+        if re.fullmatch(r"[FG]\d{2}", str(column)) # change this when KSADS is used
     ]
 
 
