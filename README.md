@@ -116,6 +116,7 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 Brain phenotype (Mediator) ~ Deprivation (X) + Covariates                    # OLS
 Disease (Y, 0/1)           ~ Deprivation (X) + Brain phenotype + Covariates   # logistic regression
 ```
+<div align="center">
 
 | Quantity | Definition |
 |---|---|
@@ -124,17 +125,23 @@ Disease (Y, 0/1)           ~ Deprivation (X) + Brain phenotype + Covariates   # 
 | `direct` | Coefficient of X in the outcome model, adjusted for the mediator (log-odds) |
 | `indirect` | `a × b` |
 
+<div>
+
 ### Input files
 
 Both files must be in `--data-dir`.
 
 **1. `mediation_info.csv`** (`--info-file`): the list of models to run, one row per model, with three required columns:
 
+<div align="center">
+
 | Column | Content |
 |---|---|
 | `X` | Name of the deprivation column in the data file |
 | `Mediator` | Name of the brain-phenotype column in the data file |
 | `Y` | Name of the binary disease column in the data file |
+
+<div>
 
 Example (illustrative names):
 
