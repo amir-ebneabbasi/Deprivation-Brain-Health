@@ -35,6 +35,8 @@ The repository includes two main components:
 
 ## System requirements
 
+These represent the tested configurations and are not strict requirements; other operating systems or software versions may also be compatible but have not been systematically tested.
+
 ### Operating systems
 
 | Operating system | Version | Used for |
@@ -83,7 +85,7 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 
 ## Demo
 
-A small synthetic dataset and a one-command run are provided in the [`demo/`](demo) folder so that the mediation code can be tested without access to any cohort data.
+A small synthetic dataset and a one-command run are provided in the demo/ folder to test the mediation analysis pipeline without access to any cohort data. The demo is limited to the mediation analysis; the genetic analysis components were developed previously by others.
 
 > [!NOTE]
 > The demo data are randomly generated and contain no participant data. Demo results are not related to the findings of the study.
@@ -139,7 +141,8 @@ IMD,vol_bankssts,F00
 
 ### Expected run time
 
-> The demo takes a few seconds to run on a standard desktop computer. Runtime increases with both sample size and the number of bootstrap iterations. At the UK Biobank (UKB) sample size used in this study, with 5,000 bootstrap iterations, each line specified in mediation_info takes approximately 1 hour to complete on the HPC cluster using a single CPU on the icelake-himem partition.
+The demo takes a few seconds to run on a standard desktop computer. Runtime increases with both sample size and the number of bootstrap iterations. At the UK Biobank (UKB) sample size used in this study, with 5,000 bootstrap iterations, each line specified in mediation_info takes 1 hour to complete on the HPC cluster using a single CPU on the icelake-himem partition.
+
 ---
 
 ## Data availability
