@@ -3,12 +3,13 @@
 **Preprint:** Ebneabbasi A, Warrier V, Montagnese M, Romero Garcia R, Bethlehem RAI, Rittman T. *Mapping the Health Burden of Neighbourhood Deprivation: Neurobiological Evidence Across the Life Span.* medRxiv (2026). [https://doi.org/10.64898/2026.08.29.26361714](https://doi.org/10.64898/2026.08.29.26361714) · [Preprint page](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1) · [PDF](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1.full.pdf)
 
 <p>
-  <a href="#computing-environment"><img src="https://img.shields.io/badge/Computing%20environment-0969da?style=for-the-badge" alt="Computing environment"></a>
-  <a href="#software-versions"><img src="https://img.shields.io/badge/Software%20versions-8250df?style=for-the-badge" alt="Software versions"></a>
+  <a href="#system-requirements"><img src="https://img.shields.io/badge/System%20requirements-0969da?style=for-the-badge" alt="System requirements"></a>
+  <a href="#installation-guide"><img src="https://img.shields.io/badge/Installation%20guide-8250df?style=for-the-badge" alt="Installation guide"></a>
+  <a href="#demo"><img src="https://img.shields.io/badge/Demo-fb8500?style=for-the-badge" alt="Demo"></a>
   <a href="#data-availability"><img src="https://img.shields.io/badge/Data%20availability-1a7f37?style=for-the-badge" alt="Data availability"></a>
   <a href="#data-processing-and-provenance"><img src="https://img.shields.io/badge/Data%20processing%20and%20provenance-bf8700?style=for-the-badge" alt="Data processing and provenance"></a>
-  <a href="#deprivationbraindisease-mediation"><img src="https://img.shields.io/badge/Deprivation%E2%80%93brain%E2%80%93disease%20mediation-cf222e?style=for-the-badge" alt="Deprivation–brain–disease mediation"></a>
-  <a href="#genetic-analysis"><img src="https://img.shields.io/badge/Genetic%20analysis-0e8a7d?style=for-the-badge" alt="Genetic analysis"></a>
+  <a href="#instructions-for-use"><img src="https://img.shields.io/badge/Instructions%20for%20use-cf222e?style=for-the-badge" alt="Instructions for use"></a>
+  <a href="#reproduction-instructions"><img src="https://img.shields.io/badge/Reproduction%20instructions-0e8a7d?style=for-the-badge" alt="Reproduction instructions"></a>
   <a href="#citation"><img src="https://img.shields.io/badge/Citation-6e7781?style=for-the-badge" alt="Citation"></a>
   <a href="#license"><img src="https://img.shields.io/badge/License-24292f?style=for-the-badge" alt="License"></a>
 </p>
@@ -32,18 +33,22 @@ The repository includes two main components:
 
 ---
 
-## Computing environment
+## System requirements
 
-All analyses were run on a high-performance computing (HPC) cluster using the SLURM workload manager.
+### Operating systems
 
----
+| Operating system | Version | Used for |
+|:---|:---|:---|
+| Linux (HPC cluster, SLURM workload manager) | Rocky Linux 8 | Full analyses on cohort data |
+| macOS | 26.6.2 | Demo |
 
-## Software versions
+### Software dependencies and versions
 
 | Software | Version | Used for |
 |:---|:---|:---|
 | Python | 3.11 | Mediation and statistical analyses |
 | statsmodels | 0.14.4 | Regression models |
+| R | 4.3.2 | Genetic analysis |
 | SNPRelate | 1.34.1 | GDS conversion and LD pruning |
 | KING | 2.3.2 | Pairwise relatedness (up to third degree) |
 | GENESIS | 2.30.0 | Ancestry PCs, kinship, linear mixed models |
@@ -53,29 +58,94 @@ All analyses were run on a high-performance computing (HPC) cluster using the SL
 > [!NOTE]
 > PC-AiR and PC-Relate are run through the GENESIS package (`pcair()` and `pcrelate()`).
 
-### Example environment setup
+### Non-standard hardware
+
+None required.
+
+---
+
+## Installation guide
+
+### Instructions
 
 ```bash
-pip install statsmodels==0.14.4 numpy pandas scipy
-
-# R (genetic analysis) — run inside R
-# if (!require("BiocManager")) install.packages("BiocManager")
-# BiocManager::install(c("SNPRelate", "GENESIS"))   # target GENESIS 2.30.0, SNPRelate 1.34.1
+git clone https://github.com/amir-ebneabbasi/Deprivation-Brain-Health.git
 ```
 
 KING (v2.3.2) is a standalone binary; download it from the [KING website](https://www.kingrelatedness.com/) and make sure it is on your `PATH` (or loaded as a module on your cluster).
 
-### Installation time
+### Typical install time
 
 > [!TIP]
-> Installation typically takes about 10 minutes on a standard HPC node with internet access (Python packages ~1–2 min, KING under 1 min, R/Bioconductor packages ~5–10 min).
+> Installation typically takes about 10 minutes on a normal desktop computer with internet access (Python packages ~1–2 min, KING under 1 min, R/Bioconductor packages ~5–10 min). Only the Python packages are needed to run the demo.
 
+---
+
+## Demo
+
+A small synthetic dataset and a one-command run are provided in the [`demo/`](demo) folder so that the mediation code can be tested without access to any cohort data.
+
+> [!NOTE]
+> The demo data are randomly generated and contain no participant data. Demo results are not related to the findings of the study.
+
+### Instructions to run the demo
+
+| File | Purpose |
+|:---|:---|
+| `demo/make_demo.py` | Creates the synthetic input files (`Data_dep_brain_icd.csv` and `mediation_info.csv`) |
+| `demo/run_demo.py` | Runs `dep_main.py` on the demo files and prints the result |
+
+Run from the repository root (the folder containing `dep_main.py`):
+
+```bash
+python demo/make_demo.py --with-signal
+python demo/run_demo.py
+```
+
+The demo files are written to `demo_data/`. The demo has a single mediation model, so no `--task-id` and no multiple-comparison correction are needed.
+
+If you run `run_demo.py` from another folder, pass the locations explicitly, for example `python run_demo.py --dep-main ../dep_main.py --data-dir demo_data`.
+
+### Demo data
+
+`Data_dep_brain_icd.csv` contains 2,000 simulated participants with:
+
+- `id_col`
+- `PC1` … `PC10`
+- `site` (random choice of 1, 2, 3, 4) and `sex` (random 0/1)
+- `age`, `age2`, `sex_age`, `age2_sex`
+- `IMD` (deprivation), `SurfaceHoles`, `FD`, `FD_max` and `vol_bankssts` (brain phenotype)
+- `F00` (more than 50 cases) and 20 other randomly chosen `F##` disease columns
+
+Continuous variables are random z-scores. `age2`, `sex_age` and `age2_sex` are computed from `age` and `sex`.
+
+`mediation_info.csv` contains one model:
+
+```csv
+X,Mediator,Y
+IMD,vol_bankssts,F00
+```
+
+| Option (`make_demo.py`) | Default | Description |
+|:---|:---|:---|
+| `--out-dir` | `demo_data` | Output folder |
+| `--n` | 2000 | Number of simulated participants |
+| `--seed` | 42 | Random seed |
+| `--with-signal` | off | Adds a weak IMD → `vol_bankssts` → `F00` relationship. Without it the data are pure noise |
+
+### Expected output
+
+`run_demo.py` uses 200 bootstrap replicates (instead of the default 5,000) so the demo finishes quickly. The result is saved to `demo_data/results_mediation_chunk_0.csv` and printed as a table with `a`, `b`, `direct` and `indirect`, their 95% confidence intervals and p-values, and the numbers of cases and controls. With `--with-signal`, `a` and `b` are expected to be negative and `indirect` positive.
+
+### Expected run time
+
+The demo takes a few seconds to run on a standard desktop computer. Runtime increases with both sample size and the number of bootstrap iterations. At the UK Biobank (UKB) sample size used in this study, with 5,000 bootstrap iterations, each line specified in mediation_info takes approximately 1 hour to complete on the HPC cluster using a single CPU on the icelake-himem partition.
 ---
 
 ## Data availability
 
 > [!IMPORTANT]
-> Participant-level data are controlled-access and cannot be redistributed by the authors. This repository therefore contains code only.
+> Participant-level data are controlled-access and cannot be redistributed by the authors. This repository therefore contains code only, plus scripts that generate a synthetic demo dataset (see [Demo](#demo)).
 
 - **ABCD and HBCD:** available to eligible researchers through the [NIH Brain Development Cohorts Data Hub](https://www.nbdc-datahub.org/), subject to approval of a Data Use Certification and completion of the required training.
 - **UK Biobank:** available to eligible researchers through the [UK Biobank access process](https://www.ukbiobank.ac.uk/use-our-data/apply-for-access/).
@@ -93,11 +163,15 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 
 ---
 
-## Deprivation–brain–disease mediation
+## Instructions for use
+
+This section explains how to run the software on your own data. The repository has two components: the [mediation analysis](#deprivationbraindisease-mediation) and the [genetic analysis](#genetic-analysis).
+
+### Deprivation–brain–disease mediation
 
 `dep_main.py` tests whether regional brain phenotypes mediate the association between neighbourhood deprivation and psychiatric or neurological disease. It runs a bootstrap mediation analysis with a **binary disease outcome** and is designed to run as a SLURM array, with each task processing a chunk of the mediation models.
 
-### Models
+#### Models
 
 ```text
 Brain phenotype (Mediator) ~ Deprivation (X) + Covariates                    # OLS
@@ -111,7 +185,7 @@ Disease (Y, 0/1)           ~ Deprivation (X) + Brain phenotype + Covariates   # 
 | `direct` | Coefficient of X in the outcome model, adjusted for the mediator (log-odds) |
 | `indirect` | `a × b` |
 
-### Input files
+#### Input files
 
 Both files must be in `--data-dir`.
 
@@ -144,13 +218,13 @@ deprivation,brain_region_2,G30
 | `SurfaceHoles` | FreeSurfer surface-quality covariate |
 | `F##` and `G##` columns | ICD-10 three-character disease indicators (for example `F32`, `G30`), coded 0/1 and used to define controls |
 
-### Cases and controls
+#### Cases and controls
 
 - **Cases:** participants with `Y == 1` and a non-missing X.
 - **Controls:** participants with `0` in **every** column named `F##` or `G##` (that is, no F- or G-chapter diagnosis). This control pool is shared across all models.
 - A model is skipped (`error = too_few_cases`) unless it has more than 50 cases (`--min-cases`).
 
-### Bootstrap procedure
+#### Bootstrap procedure
 
 For each model, each of the `--n-bootstrap` replicates (default 5,000):
 
@@ -164,7 +238,7 @@ Replicates where the models fail are skipped. For each quantity, the script repo
 p = 2 × min(n_positive, n_negative) / (n_positive + n_negative)
 ```
 
-### Command-line options
+#### Command-line options
 
 | Option | Default | Description |
 |:---|:---|:---|
@@ -178,7 +252,33 @@ p = 2 × min(n_positive, n_negative) / (n_positive + n_negative)
 | `--task-id` | `SLURM_ARRAY_TASK_ID`, else 0 | Which chunk to process |
 | `--seed` | none | Random seed (each model in a chunk uses `seed + model index`) |
 
-### Output
+#### Running on your data
+
+Run a single chunk (for example, a small number of models):
+
+```bash
+python dep_main.py --data-dir /path/to/data --n-bootstrap 5000 --seed 42 --task-id 0
+```
+
+Run all chunks as a SLURM array. Task IDs start at 0, and the number of tasks is `ceil(number of rows in mediation_info.csv / chunk_size)`. For example, 250 models with `--chunk-size 10` need 25 tasks:
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=mediation
+#SBATCH --array=0-24
+#SBATCH --cpus-per-task=<CPUS>
+#SBATCH --mem=<MEM>
+#SBATCH --time=<HH:MM:SS>
+#SBATCH --output=logs/mediation_%A_%a.out
+
+python dep_main.py \
+    --data-dir /path/to/data \
+    --chunk-size 10 \
+    --n-bootstrap 5000 \
+    --seed 42
+```
+
+#### Output
 
 Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
 
@@ -187,9 +287,7 @@ Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
 > [!NOTE]
 > Benjamini–Hochberg FDR correction is not applied by this script. Merge the chunk files and apply it across models afterwards.
 
----
-
-## Genetic analysis
+### Genetic analysis
 
 The goal of this pipeline is to obtain ancestry principal components (PCs) and a genetic relationship matrix (GRM) to be used as covariates in downstream analyses.
 
@@ -197,13 +295,25 @@ The goal of this pipeline is to obtain ancestry principal components (PCs) and a
   <img src="genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
 </p>
 
-### `plink_to_gds.R`
+Run the scripts in the order shown, from the folder containing your merged autosomal PLINK files, after adjusting the input and output paths in each script to match your data. `genesis.R` is run as a SLURM array with one task per brain phenotype.
+
+```bash
+Rscript plink_to_gds.R
+Rscript ld_pruning.R
+bash king.sh
+Rscript king_to_matrix.R
+Rscript pc_air.R
+Rscript pc_relate.R
+Rscript genesis.R
+```
+
+#### `plink_to_gds.R`
 
 Converts merged autosomal PLINK files (`BED/BIM/FAM`) to GDS format using `SNPRelate`.
 
 **Output:** `genotype_autosomes.gds`
 
-### `ld_pruning.R`
+#### `ld_pruning.R`
 
 Performs linkage disequilibrium (LD) pruning of the autosomal genotype data using `SNPRelate`. Correlation-based pruning is applied to reduce redundancy among highly correlated genetic variants.
 
@@ -211,36 +321,33 @@ The resulting independent SNP set is used for downstream PC-AiR and PC-Relate an
 
 **Output:** `pruned_snps.txt`
 
-### `king.sh`
+#### `king.sh`
 
 Runs KING to estimate pairwise genetic relatedness up to third-degree relatives.
 
 **Output:** `eur_king.kin0`
 
-### `king_to_matrix.R`
+#### `king_to_matrix.R`
 
 Converts KING relatedness estimates into a kinship matrix compatible with `GENESIS`.
 
 **Output:** `eur_kinship_matrix.rds`
 
-### `pc_air.R`
+#### `pc_air.R`
 
 Runs PC-AiR using LD-pruned SNPs and KING relatedness estimates to obtain ancestry principal components while accounting for related individuals.
 
 **Output:** `pc.rds`
 
-### `pc_relate.R`
+#### `pc_relate.R`
 
 Runs PC-Relate using ancestry PCs and unrelated reference samples to estimate ancestry-adjusted genetic relatedness and construct a sparse genetic relationship matrix (GRM).
 
 **Outputs:** `pcrelate.rds` and `pcrelate_sparse.rds`
 
-### `genesis.R`
+#### `genesis.R`
 
-Runs the final GENESIS analysis for each brain phenotype using a SLURM array. It:
-
-- fits a linear mixed model using the PC-Relate GRM
-- adjusts for demographic, imaging, and PC-AiR covariates
+Fits a linear mixed model using the PC-Relate GRM
 
 **Outputs:** `kinship-adjusted estimates`
 
