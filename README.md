@@ -11,7 +11,6 @@
   <a href="#software-versions"><img src="https://img.shields.io/badge/Software%20versions-8250df?style=for-the-badge" alt="Software versions"></a>
   <a href="#data-availability"><img src="https://img.shields.io/badge/Data%20availability-1a7f37?style=for-the-badge" alt="Data availability"></a>
   <a href="#data-processing-and-provenance"><img src="https://img.shields.io/badge/Data%20processing%20and%20provenance-bf8700?style=for-the-badge" alt="Data processing and provenance"></a>
-  <br>
   <a href="#deprivationbraindisease-mediation"><img src="https://img.shields.io/badge/Deprivation%E2%80%93brain%E2%80%93disease%20mediation-cf222e?style=for-the-badge" alt="Deprivation–brain–disease mediation"></a>
   <a href="#genetic-analysis"><img src="https://img.shields.io/badge/Genetic%20analysis-0e8a7d?style=for-the-badge" alt="Genetic analysis"></a>
   <a href="#citation"><img src="https://img.shields.io/badge/Citation-6e7781?style=for-the-badge" alt="Citation"></a>
@@ -24,15 +23,11 @@
 
 This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, and disease risk across three cohorts spanning the life span:
 
-<div align="center">
-
 | Cohort | Sample | Age range |
-|---|---|---|
+|:---|:---|:---|
 | HEALthy Brain and Child Development (HBCD) Study | n = 84 | 0–4 weeks postnatal |
 | Adolescent Brain Cognitive Development (ABCD) Study | n = 4,792 | 9–10 years |
 | UK Biobank (UKB) | ~500,000 adults | 44–87 years |
-
-</div>
 
 The repository includes two main components:
 
@@ -49,10 +44,10 @@ All analyses were run on a high-performance computing (HPC) cluster using the SL
 
 <h2 align="center">Software versions</h2>
 
-<div align="center">
-  
+### Versions used in the study
+
 | Software | Version | Used for |
-|---|---|---|
+|:---|:---|:---|
 | Python | 3.11 | Mediation and statistical analyses |
 | statsmodels | 0.14.4 | Regression models |
 | SNPRelate | 1.34.1 | GDS conversion and LD pruning |
@@ -60,8 +55,6 @@ All analyses were run on a high-performance computing (HPC) cluster using the SL
 | GENESIS | 2.30.0 | Ancestry PCs, kinship, linear mixed models |
 | PC-AiR | 0.8.0 | Ancestry principal components accounting for relatedness |
 | PC-Relate | 1.0.0 | Ancestry-adjusted GRM |
-
-</div>
 
 > [!NOTE]
 > PC-AiR and PC-Relate are run through the GENESIS package (`pcair()` and `pcrelate()`).
@@ -116,16 +109,13 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 Brain phenotype (Mediator) ~ Deprivation (X) + Covariates                    # OLS
 Disease (Y, 0/1)           ~ Deprivation (X) + Brain phenotype + Covariates   # logistic regression
 ```
-<div align="center">
 
 | Quantity | Definition |
-|---|---|
+|:---|:---|
 | `a` | Coefficient of X in the mediator model (OLS) |
 | `b` | Coefficient of the mediator in the outcome model (log-odds) |
 | `direct` | Coefficient of X in the outcome model, adjusted for the mediator (log-odds) |
 | `indirect` | `a × b` |
-
-<div>
 
 ### Input files
 
@@ -133,15 +123,11 @@ Both files must be in `--data-dir`.
 
 **1. `mediation_info.csv`** (`--info-file`): the list of models to run, one row per model, with three required columns:
 
-<div align="center">
-
 | Column | Content |
-|---|---|
+|:---|:---|
 | `X` | Name of the deprivation column in the data file |
 | `Mediator` | Name of the brain-phenotype column in the data file |
 | `Y` | Name of the binary disease column in the data file |
-
-<div>
 
 Example (illustrative names):
 
@@ -154,7 +140,7 @@ deprivation,brain_region_2,G30
 **2. `Data_dep_brain_icd.csv`** (`--data-file`): one row per participant, with these columns:
 
 | Column(s) | Description |
-|---|---|
+|:---|:---|
 | X column(s) | Deprivation measure, as named in `mediation_info.csv` |
 | Mediator column(s) | Brain phenotypes, as named in `mediation_info.csv` |
 | Y column(s) | Binary disease indicators (1 = case, 0 = no diagnosis), as named in `mediation_info.csv` |
@@ -187,7 +173,7 @@ p = 2 × min(n_positive, n_negative) / (n_positive + n_negative)
 ### Command-line options
 
 | Option | Default | Description |
-|---|---|---|
+|:---|:---|:---|
 | `--data-dir` | `path/to/working/dir` (placeholder, so always set this) | Folder containing the input files |
 | `--info-file` | `mediation_info.csv` | Model specification file |
 | `--data-file` | `Data_dep_brain_icd.csv` | Analysis dataset |
@@ -214,7 +200,7 @@ Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
 The goal of this pipeline is to obtain ancestry principal components (PCs) and a genetic relationship matrix (GRM) to be used as covariates in downstream analyses.
 
 <p align="center">
-  <img src="figures/genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
+  <img src="genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
 </p>
 
 ### `plink_to_gds.R`
@@ -233,7 +219,7 @@ The resulting independent SNP set is used for downstream PC-AiR and PC-Relate an
 
 ### `king.sh`
 
-Runs KING (v2.3.2) to estimate pairwise genetic relatedness up to third-degree relatives.
+Runs KING to estimate pairwise genetic relatedness up to third-degree relatives.
 
 **Output:** `eur_king.kin0`
 
