@@ -1,12 +1,8 @@
-<h1 align="center">Deprivation–Brain–Disease and Genetic Analyses</h1>
-
-<div align="center">
+# Deprivation–Brain–Disease and Genetic Analyses
 
 **Preprint:** Ebneabbasi A, Warrier V, Montagnese M, Romero Garcia R, Bethlehem RAI, Rittman T. *Mapping the Health Burden of Neighbourhood Deprivation: Neurobiological Evidence Across the Life Span.* medRxiv (2026). [https://doi.org/10.64898/2026.08.29.26361714](https://doi.org/10.64898/2026.08.29.26361714) · [Preprint page](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1) · [PDF](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1.full.pdf)
 
-</div>
-
-<p align="center">
+<p>
   <a href="#computing-environment"><img src="https://img.shields.io/badge/Computing%20environment-0969da?style=for-the-badge" alt="Computing environment"></a>
   <a href="#software-versions"><img src="https://img.shields.io/badge/Software%20versions-8250df?style=for-the-badge" alt="Software versions"></a>
   <a href="#data-availability"><img src="https://img.shields.io/badge/Data%20availability-1a7f37?style=for-the-badge" alt="Data availability"></a>
@@ -19,7 +15,7 @@
 
 ---
 
-<h2 align="center">Overview</h2>
+## Overview
 
 This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, and disease risk across three cohorts spanning the life span:
 
@@ -36,13 +32,13 @@ The repository includes two main components:
 
 ---
 
-<h2 align="center">Computing environment</h2>
+## Computing environment
 
 All analyses were run on a high-performance computing (HPC) cluster using the SLURM workload manager.
 
 ---
 
-<h2 align="center">Software versions</h2>
+## Software versions
 
 ### Versions used in the study
 
@@ -78,7 +74,7 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 
 ---
 
-<h2 align="center">Data availability</h2>
+## Data availability
 
 > [!IMPORTANT]
 > Participant-level data are controlled-access and cannot be redistributed by the authors. This repository therefore contains code only.
@@ -88,7 +84,7 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 
 ---
 
-<h2 align="center">Data processing and provenance</h2>
+## Data processing and provenance
 
 - **HBCD:** imaging and genetic data were processed by the HBCD Study, and preprocessed data were downloaded for the present analyses.
 - **UKB genetic data:** processed by the UK Biobank team.
@@ -99,7 +95,7 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 
 ---
 
-<h2 align="center">Deprivation–brain–disease mediation</h2>
+## Deprivation–brain–disease mediation
 
 `dep_main.py` tests whether regional brain phenotypes mediate the association between neighbourhood deprivation and psychiatric or neurological disease. It runs a bootstrap mediation analysis with a **binary disease outcome** and is designed to run as a SLURM array, with each task processing a chunk of the mediation models.
 
@@ -195,11 +191,11 @@ Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
 
 ---
 
-<h2 align="center">Genetic analysis</h2>
+## Genetic analysis
 
 The goal of this pipeline is to obtain ancestry principal components (PCs) and a genetic relationship matrix (GRM) to be used as covariates in downstream analyses.
 
-<p align="center">
+<p>
   <img src="genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
 </p>
 
@@ -252,7 +248,7 @@ Runs the final GENESIS analysis for each brain phenotype using a SLURM array. It
 
 ---
 
-<h2 align="center">Citation</h2>
+## Citation
 
 If you use this code, please cite:
 
@@ -268,6 +264,6 @@ If you use this code, please cite:
 
 ---
 
-<h2 align="center">License</h2>
+## License
 
 This repository is released under the MIT License.
