@@ -74,8 +74,6 @@ None required.
 git clone https://github.com/amir-ebneabbasi/Deprivation-Brain-Health.git
 ```
 
-KING (v2.3.2) is a standalone binary; download it from the [KING website](https://www.kingrelatedness.com/) and make sure it is on your `PATH` (or loaded as a module on your cluster).
-
 ### Typical install time
 
 > [!TIP]
