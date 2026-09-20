@@ -245,52 +245,6 @@ Runs the final GENESIS analysis for each brain phenotype using a SLURM array. It
 
 ---
 
-## Running on SLURM
-
-Both `dep_main.py` and `genesis.R` are designed to run as SLURM job arrays. The templates below are examples; adjust module names, paths and resources to your cluster.
-
-### Mediation (`dep_main.py`)
-
-Task IDs start at 0, and the number of tasks is `ceil(number of rows in mediation_info.csv / chunk_size)`. For example, 250 models with `--chunk-size 10` need 25 tasks:
-
-```bash
-#!/bin/bash
-#SBATCH --job-name=mediation
-#SBATCH --array=0-24
-#SBATCH --cpus-per-task=<CPUS>
-#SBATCH --mem=<MEM>
-#SBATCH --time=<HH:MM:SS>
-#SBATCH --output=logs/mediation_%A_%a.out
-
-python dep_main.py \
-    --data-dir /path/to/working/dir \
-    --chunk-size 10 \
-    --n-bootstrap 5000 \
-    --seed 42
-```
-
-To run a single chunk without SLURM: `python dep_main.py --data-dir /path/to/working/dir --task-id 0`.
-
-### Genetic analysis (`genesis.R`)
-
-One array task per brain phenotype. The upstream steps (`plink_to_gds.R` through `pc_relate.R`, and `king.sh`) are run once, in the order shown above.
-
-```bash
-#!/bin/bash
-#SBATCH --job-name=genesis
-#SBATCH --array=1-<N_PHENOTYPES>
-#SBATCH --cpus-per-task=<CPUS>
-#SBATCH --mem=<MEM>
-#SBATCH --time=<HH:MM:SS>
-#SBATCH --output=logs/genesis_%A_%a.out
-
-module load R/<version>   # R with GENESIS 2.30.0 and SNPRelate 1.34.1
-
-Rscript genesis.R ${SLURM_ARRAY_TASK_ID}
-```
-
----
-
 ## Citation
 
 If you use this code, please cite:
