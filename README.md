@@ -90,7 +90,6 @@ Participant-level data are controlled-access and cannot be redistributed by the 
   - ABCD: [ucam-department-of-psychiatry/ABCD](https://github.com/ucam-department-of-psychiatry/ABCD)
   - UKB: [ucam-department-of-psychiatry/UKB](https://github.com/ucam-department-of-psychiatry/UKB)
 - **ABCD genetic quality control:** followed the pipeline at [vwarrier/ABCD_geneticQC](https://github.com/vwarrier/ABCD_geneticQC).
-- **Spin permutation analyses:** performed with code at [amir-ebneabbasi/Spatial-Colocation](https://github.com/amir-ebneabbasi/Spatial-Colocation).
 
 ---
 
