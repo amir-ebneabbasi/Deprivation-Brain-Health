@@ -139,7 +139,7 @@ IMD,vol_bankssts,F00
 
 ### Expected run time
 
-The demo takes a few seconds to run on a standard desktop computer. Runtime increases with both sample size and the number of bootstrap iterations. At the UK Biobank (UKB) sample size used in this study, with 5,000 bootstrap iterations, each line specified in mediation_info takes approximately 1 hour to complete on the HPC cluster using a single CPU on the icelake-himem partition.
+> The demo takes a few seconds to run on a standard desktop computer. Runtime increases with both sample size and the number of bootstrap iterations. At the UK Biobank (UKB) sample size used in this study, with 5,000 bootstrap iterations, each line specified in mediation_info takes approximately 1 hour to complete on the HPC cluster using a single CPU on the icelake-himem partition.
 ---
 
 ## Data availability
