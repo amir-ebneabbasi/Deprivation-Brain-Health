@@ -55,8 +55,6 @@ All analyses were run on a high-performance computing (HPC) cluster using the SL
 
 PC-AiR and PC-Relate are run through the GENESIS package (`pcair()` and `pcrelate()`).
 
-Multiple-comparison correction used the Benjamini–Hochberg false discovery rate (FDR) procedure.
-
 ### Example environment setup
 
 ```bash
