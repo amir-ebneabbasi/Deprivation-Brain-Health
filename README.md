@@ -27,7 +27,6 @@ The repository includes two main components:
 - [Data processing and provenance](#data-processing-and-provenance)
 - [Deprivation–brain–disease mediation](#deprivationbraindisease-mediation)
 - [Genetic analysis](#genetic-analysis)
-- [Running on SLURM](#running-on-slurm)
 - [Citation](#citation)
 - [License](#license)
 
