@@ -263,24 +263,6 @@ Run a single chunk (for example, a small number of models):
 python dep_main.py --data-dir /path/to/data --n-bootstrap 5000 --seed 42 --task-id 0
 ```
 
-Run all chunks as a SLURM array. Task IDs start at 0, and the number of tasks is `ceil(number of rows in mediation_info.csv / chunk_size)`. For example, 250 models with `--chunk-size 10` need 25 tasks:
-
-```bash
-#!/bin/bash
-#SBATCH --job-name=mediation
-#SBATCH --array=0-24
-#SBATCH --cpus-per-task=<CPUS>
-#SBATCH --mem=<MEM>
-#SBATCH --time=<HH:MM:SS>
-#SBATCH --output=logs/mediation_%A_%a.out
-
-python dep_main.py \
-    --data-dir /path/to/data \
-    --chunk-size 10 \
-    --n-bootstrap 5000 \
-    --seed 42
-```
-
 #### Output
 
 Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
