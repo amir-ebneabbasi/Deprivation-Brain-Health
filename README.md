@@ -1,12 +1,10 @@
-
-
 # Deprivation–Brain–Disease and Genetic Analyses
 
 **Preprint:** Ebneabbasi A, Warrier V, Montagnese M, Romero Garcia R, Bethlehem RAI, Rittman T. *Mapping the Health Burden of Neighbourhood Deprivation: Neurobiological Evidence Across the Life Span.* medRxiv (2026). [https://doi.org/10.64898/2026.08.29.26361714](https://doi.org/10.64898/2026.08.29.26361714) · [Preprint page](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1) · [PDF](https://www.medrxiv.org/content/10.64898/2026.08.29.26361714v1.full.pdf)
 
 ## Overview
 
-This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, disease risk across three cohorts spanning the life span:
+This repository contains code for analysing relationships between neighbourhood deprivation, brain phenotypes, and disease risk across three cohorts spanning the life span:
 
 | Cohort | Sample | Age range |
 |---|---|---|
@@ -24,7 +22,7 @@ The repository includes two main components:
 ## Table of contents
 
 - [Computing environment](#computing-environment)
-- [Software dependencies](#software-dependencies)
+- [Software versions](#software-versions)
 - [Data availability](#data-availability)
 - [Data processing and provenance](#data-processing-and-provenance)
 - [Deprivation–brain–disease mediation](#deprivationbraindisease-mediation)
@@ -37,7 +35,7 @@ The repository includes two main components:
 
 ## Computing environment
 
-All analyses were run on a high-performance computing (HPC) cluster.
+All analyses were run on a high-performance computing (HPC) cluster using the SLURM workload manager.
 
 ---
 
@@ -59,7 +57,6 @@ PC-AiR and PC-Relate are run through the GENESIS package (`pcair()` and `pcrelat
 
 Multiple-comparison correction used the Benjamini–Hochberg false discovery rate (FDR) procedure.
 
-
 ### Example environment setup
 
 ```bash
@@ -74,7 +71,7 @@ KING (v2.3.2) is a standalone binary; download it from the [KING website](https:
 
 ### Installation time
 
-Setting up the environment is quick. On a standard HPC node with internet access, installing the Python packages takes about 1–2 minutes, downloading the KING binary takes under a minute, and installing the R/Bioconductor packages (GENESIS and SNPRelate, plus their dependencies) takes roughly 5–10 minutes.
+Installation typically takes about 10 minutes on a standard HPC node with internet access (Python packages ~1–2 min, KING under 1 min, R/Bioconductor packages ~5–10 min).
 
 ---
 
@@ -101,24 +98,98 @@ Participant-level data are controlled-access and cannot be redistributed by the 
 
 ## Deprivation–brain–disease mediation
 
-`dep_main.py` tests whether regional brain phenotypes mediate associations between neighbourhood deprivation and psychiatric or neurological disease.
+`dep_main.py` tests whether regional brain phenotypes mediate the association between neighbourhood deprivation and psychiatric or neurological disease. It runs a bootstrap mediation analysis with a **binary disease outcome** and is designed to run as a SLURM array, with each task processing a chunk of the mediation models.
 
-Two models are fitted:
-
-```text
-Brain phenotype ~ Deprivation + Covariates
-Disease ~ Deprivation + Brain phenotype + Covariates
-```
-
-The mediation effect is calculated as:
+### Models
 
 ```text
-Indirect effect = a × b
+Brain phenotype (Mediator) ~ Deprivation (X) + Covariates                    # OLS
+Disease (Y, 0/1)           ~ Deprivation (X) + Brain phenotype + Covariates   # logistic regression
 ```
 
-where *a* is the deprivation coefficient in the brain model and *b* is the brain-phenotype coefficient in the disease model.
+| Quantity | Definition |
+|---|---|
+| `a` | Coefficient of X in the mediator model (OLS) |
+| `b` | Coefficient of the mediator in the outcome model (log-odds) |
+| `direct` | Coefficient of X in the outcome model, adjusted for the mediator (log-odds) |
+| `indirect` | `a × b` |
 
-Bootstrap resampling is used to estimate indirect effects, confidence intervals, and empirical p-values. Multiple comparisons are controlled with Benjamini–Hochberg FDR.
+### Input files
+
+Both files must be in `--data-dir`.
+
+**1. `mediation_info.csv`** (`--info-file`): the list of models to run, one row per model, with three required columns:
+
+| Column | Content |
+|---|---|
+| `X` | Name of the deprivation column in the data file |
+| `Mediator` | Name of the brain-phenotype column in the data file |
+| `Y` | Name of the binary disease column in the data file |
+
+Example (illustrative names):
+
+```csv
+X,Mediator,Y
+deprivation,brain_region_1,F32
+deprivation,brain_region_2,G30
+```
+
+**2. `Data_dep_brain_icd.csv`** (`--data-file`): one row per participant, with these columns:
+
+| Column(s) | Description |
+|---|---|
+| X column(s) | Deprivation measure, as named in `mediation_info.csv` |
+| Mediator column(s) | Brain phenotypes, as named in `mediation_info.csv` |
+| Y column(s) | Binary disease indicators (1 = case, 0 = no diagnosis), as named in `mediation_info.csv` |
+| `PC1` … `PC10` | Ancestry principal components |
+| `site` | Imaging site |
+| `sex`, `age`, `age2`, `sex_age`, `age2_sex` | Sex, age, age squared, and their sex interactions |
+| `SurfaceHoles` | FreeSurfer surface-quality covariate |
+| `F##` and `G##` columns | ICD-10 three-character disease indicators (for example `F32`, `G30`), coded 0/1 and used to define controls |
+
+### Cases and controls
+
+- **Cases:** participants with `Y == 1` and a non-missing X.
+- **Controls:** participants with `0` in **every** column named `F##` or `G##` (that is, no F- or G-chapter diagnosis). This control pool is shared across all models.
+- A model is skipped (`error = too_few_cases`) unless it has more than 50 cases (`--min-cases`).
+
+### Bootstrap procedure
+
+For each model, each of the `--n-bootstrap` replicates (default 5,000):
+
+1. Resamples cases with replacement (same number as the observed cases).
+2. Resamples controls with replacement (same number as the control pool).
+3. Fits the OLS mediator model and the logistic outcome model, and stores `a`, `b`, `direct` and `indirect`.
+
+Replicates where the models fail are skipped. For each quantity, the script reports the mean over successful replicates, a 95% percentile confidence interval, and a two-sided sign-based bootstrap p-value:
+
+```text
+p = 2 × min(n_positive, n_negative) / (n_positive + n_negative)
+```
+
+### Command-line options
+
+| Option | Default | Description |
+|---|---|---|
+| `--data-dir` | `path/to/working/dir` (placeholder, so always set this) | Folder containing the input files |
+| `--info-file` | `mediation_info.csv` | Model specification file |
+| `--data-file` | `Data_dep_brain_icd.csv` | Analysis dataset |
+| `--output-dir` | same as `--data-dir` | Where results are written |
+| `--chunk-size` | 10 | Number of models per array task |
+| `--n-bootstrap` | 5000 | Bootstrap replicates per model |
+| `--min-cases` | 50 | Minimum cases required (must exceed this) |
+| `--task-id` | `SLURM_ARRAY_TASK_ID`, else 0 | Which chunk to process |
+| `--seed` | none | Random seed (each model in a chunk uses `seed + model index`) |
+
+### Output
+
+Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
+
+`X, Mediator, Y, a, b, direct, indirect`, the confidence intervals and p-values for each (`*_ci_low`, `*_ci_high`, `*_p`), `N`, `N_CASES`, `N_CONTROLS`, and `error` (empty on success).
+
+Benjamini–Hochberg FDR correction is not applied by this script. Merge the chunk files and apply it across models afterwards.
+
+See [Running on SLURM](#running-on-slurm) for a job-array example.
 
 ---
 
@@ -179,7 +250,47 @@ Runs the final GENESIS analysis for each brain phenotype using a SLURM array. It
 
 ## Running on SLURM
 
-TBC
+Both `dep_main.py` and `genesis.R` are designed to run as SLURM job arrays. The templates below are examples; adjust module names, paths and resources to your cluster.
+
+### Mediation (`dep_main.py`)
+
+Task IDs start at 0, and the number of tasks is `ceil(number of rows in mediation_info.csv / chunk_size)`. For example, 250 models with `--chunk-size 10` need 25 tasks:
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=mediation
+#SBATCH --array=0-24
+#SBATCH --cpus-per-task=<CPUS>
+#SBATCH --mem=<MEM>
+#SBATCH --time=<HH:MM:SS>
+#SBATCH --output=logs/mediation_%A_%a.out
+
+python dep_main.py \
+    --data-dir /path/to/working/dir \
+    --chunk-size 10 \
+    --n-bootstrap 5000 \
+    --seed 42
+```
+
+To run a single chunk without SLURM: `python dep_main.py --data-dir /path/to/working/dir --task-id 0`.
+
+### Genetic analysis (`genesis.R`)
+
+One array task per brain phenotype. The upstream steps (`plink_to_gds.R` through `pc_relate.R`, and `king.sh`) are run once, in the order shown above.
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=genesis
+#SBATCH --array=1-<N_PHENOTYPES>
+#SBATCH --cpus-per-task=<CPUS>
+#SBATCH --mem=<MEM>
+#SBATCH --time=<HH:MM:SS>
+#SBATCH --output=logs/genesis_%A_%a.out
+
+module load R/<version>   # R with GENESIS 2.30.0 and SNPRelate 1.34.1
+
+Rscript genesis.R ${SLURM_ARRAY_TASK_ID}
+```
 
 ---
 
