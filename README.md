@@ -201,14 +201,9 @@ Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
 
 ## Genetic analysis
 
-```mermaid
-flowchart LR
-    A["plink_to_gds.R"] --> B["ld_pruning.R"] --> C["king.sh"] --> D["king_to_matrix.R"] --> E["pc_air.R"] --> F["pc_relate.R"] --> G["genesis.R"]
-    classDef step fill:#ddf4ff,stroke:#0969da,color:#0a3069;
-    classDef final fill:#dafbe1,stroke:#1a7f37,color:#0f5323;
-    class A,B,C,D,E,F step;
-    class G final;
-```
+<p align="center">
+  <img src="figures/genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
+</p>
 
 ### `plink_to_gds.R`
 
@@ -226,7 +221,7 @@ The resulting independent SNP set is used for downstream PC-AiR and PC-Relate an
 
 ### `king.sh`
 
-Runs KING to estimate pairwise genetic relatedness up to third-degree relatives.
+Runs KING (v2.3.2) to estimate pairwise genetic relatedness up to third-degree relatives.
 
 **Output:** `eur_king.kin0`
 
