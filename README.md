@@ -92,7 +92,7 @@ A small synthetic dataset and a one-command run are provided in the demo/ folder
 
 | File | Purpose |
 |:---|:---|
-| `demo/make_demo.py` | Creates the synthetic input files (`Data_dep_brain_icd.csv` and `mediation_info.csv`) |
+| `demo/make_demo.py` | Creates the synthetic input files (`Data_dep_brain_icd.csv` and `Mediation_info.csv`) |
 | `demo/run_demo.py` | Runs `dep_main.py` on the demo files and prints the result |
 
 Run from the repository root (the folder containing `dep_main.py`):
@@ -119,7 +119,7 @@ If you run `run_demo.py` from another folder, pass the locations explicitly, for
 
 Continuous variables are random z-scores. `age2`, `sex_age` and `age2_sex` are computed from `age` and `sex`.
 
-`mediation_info.csv` contains one model:
+`Mediation_info.csv` contains one model:
 
 ```csv
 X,Mediator,Y
@@ -139,7 +139,7 @@ IMD,vol_bankssts,F00
 
 ### Expected run time
 
-The demo takes a few seconds to run on a standard desktop computer. Runtime increases with both sample size and the number of bootstrap iterations. At the UK Biobank (UKB) sample size used in this study, with 5,000 bootstrap iterations, each line specified in mediation_info takes 1 hour to complete on the HPC cluster using a single CPU on the icelake-himem partition.
+The demo takes a few seconds to run on a standard desktop computer. Runtime increases with both sample size and the number of bootstrap iterations. At the UK Biobank (UKB) sample size used in this study, with 5,000 bootstrap iterations, each line specified in Mediation_info takes 1 hour to complete on the HPC cluster using a single CPU on the icelake-himem partition.
 
 ---
 
@@ -190,7 +190,7 @@ Disease (Y, 0/1)           ~ Deprivation (X) + Brain phenotype + Covariates   # 
 
 Both files must be in `--data-dir`.
 
-**1. `mediation_info.csv`** (`--info-file`): the list of models to run, one row per model, with three required columns:
+**1. `Mediation_info.csv`** (`--info-file`): the list of models to run, one row per model, with three required columns:
 
 | Column | Content |
 |:---|:---|
@@ -210,9 +210,9 @@ deprivation,brain_region_2,G30
 
 | Column(s) | Description |
 |:---|:---|
-| X column(s) | Deprivation measure, as named in `mediation_info.csv` |
-| Mediator column(s) | Brain phenotypes, as named in `mediation_info.csv` |
-| Y column(s) | Binary disease indicators (1 = case, 0 = no diagnosis), as named in `mediation_info.csv` |
+| X column(s) | Deprivation measure, as named in `Mediation_info.csv` |
+| Mediator column(s) | Brain phenotypes, as named in `Mediation_info.csv` |
+| Y column(s) | Binary disease indicators (1 = case, 0 = no diagnosis), as named in `Mediation_info.csv` |
 | `PC1` … `PC10` | Ancestry principal components |
 | `site` | Imaging site |
 | `sex`, `age`, `age2`, `sex_age`, `age2_sex` | Sex, age, age squared, and their sex interactions |
@@ -244,7 +244,7 @@ p = 2 × min(n_positive, n_negative) / (n_positive + n_negative)
 | Option | Default | Description |
 |:---|:---|:---|
 | `--data-dir` | `path/to/working/dir` (placeholder, so always set this) | Folder containing the input files |
-| `--info-file` | `mediation_info.csv` | Model specification file |
+| `--info-file` | `Mediation_info.csv` | Model specification file |
 | `--data-file` | `Data_dep_brain_icd.csv` | Analysis dataset |
 | `--output-dir` | same as `--data-dir` | Where results are written |
 | `--chunk-size` | 10 | Number of models per array task |
