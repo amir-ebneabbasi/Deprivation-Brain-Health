@@ -49,8 +49,8 @@ All analyses were run on a high-performance computing (HPC) cluster using the SL
 
 <h2 align="center">Software versions</h2>
 
-### Versions used in the study
-
+<div align="center">
+  
 | Software | Version | Used for |
 |---|---|---|
 | Python | 3.11 | Mediation and statistical analyses |
@@ -60,6 +60,8 @@ All analyses were run on a high-performance computing (HPC) cluster using the SL
 | GENESIS | 2.30.0 | Ancestry PCs, kinship, linear mixed models |
 | PC-AiR | 0.8.0 | Ancestry principal components accounting for relatedness |
 | PC-Relate | 1.0.0 | Ancestry-adjusted GRM |
+
+</div>
 
 > [!NOTE]
 > PC-AiR and PC-Relate are run through the GENESIS package (`pcair()` and `pcrelate()`).
