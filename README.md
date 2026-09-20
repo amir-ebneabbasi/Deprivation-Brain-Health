@@ -202,7 +202,7 @@ Each task writes `results_mediation_chunk_<task_id>.csv` with one row per model:
 ## Genetic analysis
 
 <p align="center">
-  <img src="figures/genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
+  <img src="genetic_pipeline.svg" width="900" alt="Genetic analysis pipeline: plink_to_gds.R, ld_pruning.R, king.sh, king_to_matrix.R, pc_air.R, pc_relate.R, genesis.R">
 </p>
 
 ### `plink_to_gds.R`
